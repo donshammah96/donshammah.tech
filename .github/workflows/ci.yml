@@ -1,4 +1,4 @@
-name: Portfolio Quality & Drift Gates
+name: Portfolio Quality, Drift Gates & Deployment
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  quality-gates:
-    name: Build, Redaction Check, HTML Validate, Link Check & Lighthouse (95+)
+  quality-and-deploy:
+    name: Build, Redaction Check, HTML Validate, Lighthouse & Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -17,7 +17,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 11
 
       - name: Setup Node.js 24
         uses: actions/setup-node@v4
@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install Chromium for build-time Mermaid SVG rendering
+      - name: Install Chromium with system dependencies for build-time Mermaid rendering
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Astro Typecheck & Production Build
@@ -57,3 +57,11 @@ jobs:
           configPath: "./lighthouserc.json"
           uploadArtifacts: true
           temporaryPublicStorage: true
+
+      - name: Deploy to Cloudflare Workers Static Assets
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
