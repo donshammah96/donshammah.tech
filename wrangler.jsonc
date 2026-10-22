@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "donshammah-portfolio",
+  "account_id": "594a3f8dbc98065c055e8e2fce137b5a",
   "compatibility_date": "2026-10-01",
   "assets": {
     "directory": "./dist",
