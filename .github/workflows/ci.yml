@@ -48,7 +48,7 @@ jobs:
       - name: Check Internal Links (Lychee)
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --verbose --no-progress --root-dir dist './dist/**/*.html'
+          args: --verbose --no-progress --offline --root-dir dist './dist/**/*.html'
           fail: true
 
       - name: Run Lighthouse CI (Target 95+ All Categories)
