@@ -1,0 +1,64 @@
+---
+title: "Build Market — Compliance-First Construction Infrastructure"
+subtitle: "How I architected an event-driven construction marketplace, statutory verification engine, and non-custodial M-Pesa escrow platform for Kenya."
+description: "2-minute architectural case study of Build Market: solving offline trust gaps, flaky statutory portals, and milestone escrow in East Africa."
+role: "Sole Architect & Engineer (Product, Backend, Edge, Compliance)"
+timeline: "2025 – Present"
+status: "Live Production Pilot at buildmarket.app"
+liveUrl: "https://buildmarket.app"
+notionMirrorUrl: "https://fascinated-piper-d98.notion.site/Build-Market-Architectural-Topography-Core-Systems-Design-37c3a344ec6780b9b509ffa6e9700869"
+readingTime: "2 min read"
+stack:
+  - "TypeScript"
+  - "Next.js 16 (OpenNext)"
+  - "Cloudflare Workers & R2"
+  - "Node.js 24"
+  - "NATS JetStream"
+  - "BullMQ / Redis"
+  - "PostgreSQL + Prisma 7"
+  - "M-Pesa Daraja 2.0"
+updatedDate: 2026-10-22
+---
+
+import Callout from "../../components/Callout.astro";
+import ArchitectureDiagram from "../../components/ArchitectureDiagram.astro";
+
+## The Problem
+
+Construction in Kenya runs on fragile offline trust:
+
+1. **Unverified practitioners:** Credentials across regulatory bodies (NCA, EBK, BORAQS) are claimed on paper rather than verified programmatically.
+2. **Unprotected capital:** Homeowners and diaspora investors pay large upfront deposits with zero milestone protection if work stalls.
+3. **Unreliable statutory infrastructure:** The government portals that confirm practicing licenses experience frequent downtime, timeouts, and unannounced schema drift.
+
+## The Approach
+
+**Build Market** operates strictly as a technology marketplace intermediary—never a general contractor. It connects property owners, registered professionals across 30+ trades, material suppliers, and independent dispute inspectors under an audit-logged, event-driven architecture.
+
+<ArchitectureDiagram />
+
+### The Three Hardest Engineering Problems
+
+| Challenge | Architectural Solution | Outcome |
+| :--- | :--- | :--- |
+| **1. Reliability against flaky regulator portals** | 4-stage degradation pipeline: 48h verification cache → sliding-window circuit breaker → 24h NATS JetStream retry stream → two-approver human operator queue (`apps/verification-ops`). | User onboarding **never blocks** even when external NCA/EBK portals go offline. |
+| **2. Money-movement correctness** | Non-custodial bank trust escrow paired with idempotent M-Pesa Daraja 2.0 flows (`[merchantRequestId, checkoutRequestId]`), deterministic NATS message IDs, and **acknowledge-only-after-commit** consumers. | Process crashes or network retries can never trigger a double disbursement. |
+| **3. Architectural governance on a solo team** | **26 ratified ADRs** enforced mechanically in CI via AST import-boundary tests, environment contract validators (75 keys), and an automated security drift scanner. | **0 security drift findings** across 309 production files; strict `Adapter → Service → Repo` isolation. |
+
+## System Scale at a Glance
+
+- **Workspace Topology:** Turborepo monorepo with **4 isolated applications** (`client`, `admin`, `verification-ops`, `workers`) and **8 shared packages** (`db`, `verification-domain`, `nats`, `resilience`, `redis`, `types`, `ui`, `enums`).
+- **Data Architecture:** **114 Prisma models**, **120 strict enums**, **24 vertical domain slices**, and Class A–D field-level data classification for Kenya DPA (2019) & GDPR compliance.
+- **Event Spine:** **6 persistent NATS JetStream streams** (`VERIFICATION`, `USERS`, `ORDERS`, `PROJECTS`, `NOTIFICATIONS`, `LICENSES`) + isolated Node.js 24 BullMQ worker daemons.
+- **Localized Rails:** All **47 Kenyan counties**, **9 statutory licensing authorities**, M-Pesa STK Push / PayBill / B2C, and KRA eTIMS fiscal invoice reconciliation.
+
+<Callout title="Inspect Layer 2: Full Systems Deep Dive">
+  Want to inspect the production TypeScript adapters, NATS consumer state
+  machines, `safeAction` capability pipelines, threat matrices, and all 12
+  sections of the architectural specification?
+  <br />
+  <br />
+  <a href="/work/build-market/architecture" class="btn primary">
+    Read Full Architectural Deep Dive (18 min) →
+  </a>
+</Callout>

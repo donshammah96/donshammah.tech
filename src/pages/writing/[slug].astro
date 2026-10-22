@@ -1,0 +1,34 @@
+---
+import { getCollection, render } from 'astro:content';
+import ProseLayout from '../../layouts/ProseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('writing', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+---
+<ProseLayout
+  title={post.data.title}
+  subtitle={post.data.description}
+  description={post.data.description}
+  eyebrow={`Engineering Essay · ${post.data.pubDate.toISOString().slice(0, 10)}`}
+  readingTime={post.data.readingTime}
+  notionMirrorUrl={post.data.notionMirrorUrl}
+  ogSlug={`writing/${post.id}`}
+  headings={headings}
+  articleDate={post.data.pubDate}
+>
+  <div slot="meta">
+    <a href="/writing">← All Essays</a>
+    {post.data.relatedAdr && (
+      <span> · <a href={`/decisions/${post.data.relatedAdr}`}>Related ADR →</a></span>
+    )}
+  </div>
+  <Content />
+</ProseLayout>

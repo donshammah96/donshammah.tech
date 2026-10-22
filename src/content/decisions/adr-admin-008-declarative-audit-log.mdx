@@ -1,0 +1,22 @@
+---
+adrId: "ADR-ADMIN-008"
+title: "Declarative Audit Logging Inside safeAction"
+description: "Eliminate manual audit-log omission bugs by making audit metadata a required declarative property of high-risk action definitions."
+status: "Ratified"
+scope: "apps/admin"
+date: 2026-04-02
+tradeoff: "Every administrative mutation must declare its LegalBasis and target resource descriptor."
+enforcedBy: "TypeScript compiler contract on safeAction + security drift scanner"
+---
+
+## Context
+
+When developers must remember to call `auditService.log()` manually at the end of every mutation, edge-case code paths inevitably miss audit entries.
+
+## Decision
+
+Embed declarative `auditLog` configuration directly into the `safeAction` wrapper options. The wrapper writes the append-only `AuditLog` record (with `LegalBasis` and Class C/D diff metadata) before returning success to the caller.
+
+## Consequences
+
+100% audit coverage across all administrative and verification-ops mutations.

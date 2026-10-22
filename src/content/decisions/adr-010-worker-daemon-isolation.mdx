@@ -1,0 +1,22 @@
+---
+adrId: "ADR-010"
+title: "Background Worker Daemon Isolation from Web Runtime"
+description: "Offload NATS JetStream consumers, BullMQ queues, Sharp image encoding, and BoQ PDF compilation to a standalone Node.js 24 daemon."
+status: "Ratified"
+scope: "apps/workers"
+date: 2026-03-05
+tradeoff: "Requires managing a separate containerized deployment on Render alongside Cloudflare Workers."
+enforcedBy: "Package dependency boundaries + container liveness probe"
+---
+
+## Context
+
+Running CPU-heavy Sharp WebP/Blurhash generation, PDF generation, or long-lived NATS/Redis TCP consumers inside serverless web instances causes thread starvation and cold-start timeouts.
+
+## Decision
+
+Isolate all asynchronous consumers and BullMQ workers into `apps/workers` running on Node.js 24 Alpine containers with an HTTP liveness probe.
+
+## Consequences
+
+Web p95 latency remains predictable under heavy media upload or regulator retry spikes.

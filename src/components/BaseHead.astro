@@ -1,0 +1,84 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  articleDate?: Date;
+}
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const {
+  title,
+  description,
+  ogImage = new URL('/og/index.png', Astro.site).toString(),
+  articleDate,
+} = Astro.props;
+
+const jsonLd = articleDate
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'TechArticle',
+      headline: title,
+      description,
+      datePublished: articleDate.toISOString(),
+      author: {
+        '@type': 'Person',
+        name: 'Don Shammah',
+        url: 'https://donshammah.tech/',
+      },
+    }
+  : {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: 'Don Shammah',
+      url: 'https://donshammah.tech/',
+      jobTitle: 'Backend & Systems Engineer',
+      email: 'mailto:hello@donshammah.tech',
+      address: { '@type': 'PostalAddress', addressCountry: 'KE' },
+      sameAs: [
+        'https://github.com/donshammah96',
+        'https://www.linkedin.com/in/donshammah',
+      ],
+      knowsAbout: [
+        'Distributed systems',
+        'Event-driven architecture',
+        'TypeScript',
+        'PostgreSQL',
+        'NATS JetStream',
+        'M-Pesa Daraja',
+      ],
+    };
+---
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{title}</title>
+
+<link rel="canonical" href={canonicalURL} />
+<meta name="robots" content="index, follow" />
+<meta name="description" content={description} />
+<meta name="author" content="Don Shammah" />
+<meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+<meta name="color-scheme" content="dark light" />
+
+<meta property="og:type" content={articleDate ? 'article' : 'website'} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@donshammah" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<link rel="alternate" type="application/rss+xml" title="Don Shammah — Engineering Writing & ADRs" href={new URL('/rss.xml', Astro.site)} />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600&display=swap" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css" />
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

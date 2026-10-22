@@ -1,0 +1,132 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+import '../styles/prose.css';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  articleDate?: Date;
+}
+
+const { title, description, ogImage, articleDate } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <BaseHead
+    title={title}
+    description={description}
+    ogImage={ogImage}
+    articleDate={articleDate}
+  />
+  <script is:inline>
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem('theme'); } catch (e) {}
+      var pref = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', saved || pref);
+      document.documentElement.classList.add('js');
+    })();
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true">
+    <i class="ti ti-check" aria-hidden="true"></i><span id="toast-msg">Copied</span>
+  </div>
+
+  <Nav />
+
+  <main id="main" class="wrap">
+    <slot />
+    <Footer />
+  </main>
+
+  <script is:inline>
+    'use strict';
+    var $ = function (s, c) { return (c || document).querySelector(s); };
+    var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    (function () {
+      var btn = $('#theme-toggle');
+      if (!btn) return;
+      var icon = $('i', btn);
+      function apply(t, persist) {
+        document.documentElement.setAttribute('data-theme', t);
+        if (persist) { try { localStorage.setItem('theme', t); } catch (e) {} }
+        icon.className = t === 'dark' ? 'ti ti-sun' : 'ti ti-moon';
+        btn.setAttribute('aria-label', 'Switch to ' + (t === 'dark' ? 'light' : 'dark') + ' theme');
+      }
+      apply(document.documentElement.getAttribute('data-theme') || 'dark', false);
+      btn.addEventListener('click', function () {
+        apply(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
+      });
+    })();
+
+    (function () {
+      var btn = $('#menu-btn'), links = $('#nav-links');
+      if (!btn || !links) return;
+      function set(open) {
+        links.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', String(open));
+        $('i', btn).className = open ? 'ti ti-x' : 'ti ti-menu-2';
+      }
+      btn.addEventListener('click', function () { set(!links.classList.contains('open')); });
+      $$('a', links).forEach(function (a) { a.addEventListener('click', function () { set(false); }); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+      document.addEventListener('click', function (e) { if (!e.target.closest('#nav')) set(false); });
+    })();
+
+    (function () {
+      var bar = $('#progress'), ticking = false;
+      if (!bar) return;
+      function update() {
+        var h = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.transform = 'scaleX(' + (h > 0 ? Math.min(window.scrollY / h, 1) : 0) + ')';
+        ticking = false;
+      }
+      window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+      update();
+    })();
+
+    (function () {
+      var els = $$('.reveal');
+      if (reduce || !('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+      }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+      els.forEach(function (e) { io.observe(e); });
+    })();
+
+    (function () {
+      if (reduce || !window.matchMedia('(hover: hover)').matches) return;
+      $$('.card').forEach(function (c) {
+        c.addEventListener('pointermove', function (e) {
+          var r = c.getBoundingClientRect();
+          c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+          c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+        });
+      });
+    })();
+
+    (function () {
+      var btn = $('#copy-email'), toast = $('#toast'), msg = $('#toast-msg'), t;
+      if (!btn || !toast) return;
+      function show(m) { msg.textContent = m; toast.classList.add('show'); clearTimeout(t); t = setTimeout(function () { toast.classList.remove('show'); }, 2400); }
+      btn.addEventListener('click', function () {
+        var email = btn.getAttribute('data-email');
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(email).then(function () { show('Email copied'); }, function () { window.location.href = 'mailto:' + email; });
+        } else { window.location.href = 'mailto:' + email; }
+      });
+    })();
+  </script>
+</body>
+</html>

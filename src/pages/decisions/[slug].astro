@@ -1,0 +1,29 @@
+---
+import { getCollection, render } from 'astro:content';
+import ProseLayout from '../../layouts/ProseLayout.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('decisions');
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+<ProseLayout
+  title={`${entry.data.adrId}: ${entry.data.title}`}
+  subtitle={entry.data.description}
+  description={entry.data.description}
+  eyebrow={`${entry.data.adrId} · ${entry.data.scope} · ${entry.data.status}`}
+  ogSlug={`decisions/${entry.id}`}
+  headings={headings}
+  articleDate={entry.data.date}
+>
+  <div slot="meta">
+    <a href="/decisions">← All ADRs</a> · <span><strong>Gate:</strong> {entry.data.enforcedBy}</span>
+  </div>
+  <Content />
+</ProseLayout>

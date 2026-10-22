@@ -1,0 +1,226 @@
+.prose-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px;
+  gap: 3.5rem;
+  align-items: start;
+  padding-top: 3.5rem;
+}
+
+.prose-header {
+  padding-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.prose-eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  font: 500 11px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hint);
+  margin-bottom: 1rem;
+}
+
+.prose-header h1 {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(2.1rem, 4.5vw, 3.25rem);
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  margin-bottom: 1rem;
+}
+
+.prose-subtitle {
+  font-size: 17px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 44rem;
+}
+
+.prose-meta-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  font: 400 12px var(--mono);
+  color: var(--muted);
+}
+
+.notion-mirror {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font: 400 11px var(--mono);
+  color: var(--hint);
+  text-decoration: none;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.notion-mirror:hover {
+  color: var(--ink);
+  border-color: var(--accent);
+}
+
+.prose {
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--ink);
+}
+.prose h2 {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(1.55rem, 3vw, 2.05rem);
+  letter-spacing: -0.02em;
+  margin: 3.25rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.prose h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.28rem;
+  margin: 2.25rem 0 0.75rem;
+}
+.prose h2 a,
+.prose h3 a {
+  text-decoration: none;
+}
+.prose p,
+.prose ul,
+.prose ol {
+  margin-bottom: 1.25rem;
+  color: var(--muted);
+}
+.prose strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.35rem;
+}
+.prose li {
+  margin-bottom: 0.45rem;
+}
+.prose code:not(pre code) {
+  font: 400 12.5px var(--mono);
+  padding: 0.18rem 0.42rem;
+  border-radius: 5px;
+  background: var(--bg-3);
+  color: var(--ink);
+  border: 1px solid var(--line-2);
+}
+.prose pre {
+  padding: 1.15rem 1.25rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-2);
+  background: var(--bg-2) !important;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font: 400 12.5px/1.7 var(--mono);
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.75rem 0;
+  font: 400 13px/1.6 var(--sans);
+  display: block;
+  overflow-x: auto;
+}
+.prose th {
+  font: 500 10.5px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hint);
+  text-align: left;
+  padding: 0.75rem 0.9rem;
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+}
+.prose td {
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  vertical-align: top;
+}
+
+.prose svg[id^="mermaid-"] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 1.75rem 0;
+  padding: 1.25rem;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-md);
+  background: var(--bg-2);
+}
+
+.callout {
+  margin: 1.75rem 0;
+  padding: 1.1rem 1.3rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-2);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+}
+.callout-title {
+  font: 500 11px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.toc {
+  position: sticky;
+  top: 5.5rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--line);
+  font-size: 12px;
+}
+.toc-title {
+  font: 500 10px var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--hint);
+  margin-bottom: 0.75rem;
+}
+.toc ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.toc a {
+  color: var(--muted);
+  text-decoration: none;
+  line-height: 1.4;
+  transition: color 0.2s;
+}
+.toc a:hover {
+  color: var(--accent);
+}
+
+@media (max-width: 960px) {
+  .prose-shell {
+    grid-template-columns: 1fr;
+  }
+  .toc {
+    display: none;
+  }
+}

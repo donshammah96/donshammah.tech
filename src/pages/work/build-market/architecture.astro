@@ -1,0 +1,24 @@
+---
+import { getEntry, render } from 'astro:content';
+import ProseLayout from '../../../layouts/ProseLayout.astro';
+
+const entry = await getEntry('work', 'build-market-architecture');
+if (!entry) throw new Error('Missing build-market-architecture content entry');
+const { Content, headings } = await render(entry);
+---
+<ProseLayout
+  title={entry.data.title}
+  subtitle={entry.data.subtitle}
+  description={entry.data.description}
+  eyebrow="Systems Deep Dive · Layer 2"
+  readingTime={entry.data.readingTime}
+  notionMirrorUrl={entry.data.notionMirrorUrl}
+  ogSlug="work/build-market-architecture"
+  headings={headings}
+  articleDate={entry.data.updatedDate}
+>
+  <div slot="meta">
+    <a href="/work/build-market">← Back to 2-Minute Overview</a>
+  </div>
+  <Content />
+</ProseLayout>

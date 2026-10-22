@@ -1,0 +1,227 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArchitectureDiagram from '../components/ArchitectureDiagram.astro';
+---
+<BaseLayout
+  title="Don Shammah — Backend & Systems Engineer"
+  description="Backend and systems engineer building distributed, event-driven infrastructure. Creator and solo architect of Build Market, a construction marketplace for East Africa."
+>
+  <section class="hero" id="top" style="padding-top:5rem">
+    <div>
+      <div class="status reveal"><i aria-hidden="true"></i>Open to opportunities</div>
+      <p class="role reveal" style="--d:.05s">Backend · Systems · Full-Stack</p>
+      <h1 class="reveal" style="--d:.1s">Don <em>Shammah</em></h1>
+      <p class="bio reveal" style="--d:.15s">I design backend systems that stay correct under failure. As the solo architect of Build Market, I built an event-driven construction and real estate platform for East Africa — statutory compliance state machines, milestone escrow, and capability-based security included.</p>
+      <div class="cta reveal" style="--d:.2s">
+        <a href="/work/build-market" class="btn primary"><i class="ti ti-cpu" aria-hidden="true"></i>Read Case Study</a>
+        <a href="#contact" class="btn"><i class="ti ti-mail" aria-hidden="true"></i>Get in touch</a>
+        <a href="https://github.com/donshammah96" target="_blank" rel="noopener noreferrer" class="btn" aria-label="GitHub profile"><i class="ti ti-brand-github" aria-hidden="true"></i>GitHub</a>
+        <a href="https://www.linkedin.com/in/donshammah" target="_blank" rel="noopener noreferrer" class="btn" aria-label="LinkedIn profile"><i class="ti ti-brand-linkedin" aria-hidden="true"></i>LinkedIn</a>
+      </div>
+      <ul class="tags reveal" style="--d:.25s; list-style:none" aria-label="Core technologies">
+        <li class="tag">Node.js 24</li><li class="tag">TypeScript</li><li class="tag">NATS JetStream</li><li class="tag">BullMQ</li>
+        <li class="tag">PostgreSQL</li><li class="tag">Prisma</li><li class="tag">Next.js 16</li><li class="tag">Cloudflare</li><li class="tag">M-Pesa Daraja</li>
+      </ul>
+    </div>
+
+    <div class="term reveal" style="--d:.2s" aria-hidden="true">
+      <div class="term-bar"><span></span><span></span><span></span><b>event-flow · illustrative</b></div>
+      <div class="term-body">
+        <div><span class="p">$</span> <span class="k">stream</span> follow BUILD_EVENTS</div>
+        <div><span class="c">#</span> <span class="a">payment.confirmed</span> → escrow.hold</div>
+        <div><span class="c">#</span> <span class="a">milestone.approved</span> → escrow.release</div>
+        <div><span class="c">#</span> <span class="a">credential.submitted</span> → verify.registry</div>
+        <div><span class="c">#</span> <span class="a">invoice.issued</span> → etims.reconcile</div>
+        <div><span class="p">$</span> <span class="caret"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="metrics reveal" role="list" aria-label="Build Market at a glance">
+    <div class="metric" role="listitem"><strong>4</strong><span>Apps in the monorepo</span></div>
+    <div class="metric" role="listitem"><strong>9</strong><span>Statutory boards covered</span></div>
+    <div class="metric" role="listitem"><strong>26</strong><span>Ratified ADRs</span></div>
+    <div class="metric" role="listitem"><strong>47</strong><span>Counties covered</span></div>
+  </div>
+
+  <section id="projects" aria-labelledby="h-projects">
+    <div class="sec-head reveal"><span class="num">01</span><h2 id="h-projects">Selected work</h2><div class="rule" aria-hidden="true"></div></div>
+
+    <article class="card featured reveal" aria-labelledby="featured-name">
+      <div class="f-top">
+        <div class="badges">
+          <span class="badge hot">Flagship system</span>
+          <span class="badge">buildmarket.app</span>
+          <span class="badge">Turborepo monorepo</span>
+        </div>
+        <div class="f-links">
+          <a class="circle-link" href="/work/build-market" title="Read 2-minute case study" aria-label="Read Build Market 2-minute case study"><i class="ti ti-book" aria-hidden="true"></i></a>
+          <a class="circle-link" href="https://buildmarket.app" target="_blank" rel="noopener noreferrer" title="Live platform" aria-label="Visit Build Market live platform"><i class="ti ti-external-link" aria-hidden="true"></i></a>
+          <a class="circle-link" href="https://fascinated-piper-d98.notion.site/Build-Market-Architectural-Topography-Core-Systems-Design-37c3a344ec6780b9b509ffa6e9700869" target="_blank" rel="noopener noreferrer" title="Also on Notion" aria-label="Also on Notion"><i class="ti ti-brand-notion" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <h3 id="featured-name">Build Market — construction &amp; real estate infrastructure</h3>
+      <p class="f-desc">An event-driven marketplace, compliance engine, and project-coordination platform for Kenya's construction industry. It addresses offline trust gaps, uncertified contractors, and counterfeit materials through milestone-based escrow and statutory verification pipelines.</p>
+
+      <div class="label"><i class="ti ti-topology-star-3" aria-hidden="true"></i>System architecture</div>
+      <ArchitectureDiagram />
+
+      <div class="label"><i class="ti ti-git-fork" aria-hidden="true"></i>Workspace topology</div>
+      <div class="topo">
+        <div><h4>apps/client <small>Edge BFF</small></h4><p>Edge-optimized portal for homeowners, professionals, and merchants. Cloudflare Workers via OpenNext.</p></div>
+        <div><h4>apps/admin <small>Control Plane</small></h4><p>Capability-based RBAC, safeAction adapters, tiered step-up freshness guards, immutable audit log.</p></div>
+        <div><h4>apps/verification-ops <small>Regulator Queue</small></h4><p>Credential review against NCA, EBK, BORAQS, EARB, EPRA, VRB, ISK, NEMA, and KEBS.</p></div>
+        <div><h4>apps/workers <small>Container Daemon</small></h4><p>Node.js 24 Alpine daemon on Render with HTTP liveness probes, BullMQ, and NATS JetStream subscribers.</p></div>
+      </div>
+
+      <div class="hl-grid">
+        <div class="hl"><i class="ti ti-certificate" aria-hidden="true"></i><h4>Statutory verification</h4><p>State machines verifying individual and firm credentials against nine statutory boards, with an operator fallback when registers are down.</p></div>
+        <div class="hl"><i class="ti ti-device-mobile" aria-hidden="true"></i><h4>FinTech &amp; escrow</h4><p>Daraja 2.0 STK push, B2C disbursements, bank escrow trust model, and KRA eTIMS invoice reconciliation.</p></div>
+        <div class="hl"><i class="ti ti-timeline" aria-hidden="true"></i><h4>Lifecycle &amp; BoQ engine</h4><p>Digital Bill of Quantities, staged milestones, inspection audits, and change-order controls.</p></div>
+        <div class="hl"><i class="ti ti-building-store" aria-hidden="true"></i><h4>Materials commerce</h4><p>Multi-vendor directory across 21 categories with county-level fulfillment in all 47 counties.</p></div>
+        <div class="hl"><i class="ti ti-network" aria-hidden="true"></i><h4>Distributed messaging</h4><p>JetStream streaming, consumer-group load balancing, BullMQ worker pools, and DLQs.</p></div>
+        <div class="hl"><i class="ti ti-cloud-computing" aria-hidden="true"></i><h4>Edge &amp; cloud infra</h4><p>Cloudflare edge compute paired with containerized Render workers and Redis pipelines.</p></div>
+      </div>
+
+      <div class="stack-groups">
+        <div><div class="label">Frontend &amp; edge</div><div class="chips">
+          <span class="chip">Next.js 16</span><span class="chip">React 19</span><span class="chip">TypeScript</span><span class="chip">Cloudflare Workers</span><span class="chip">R2</span><span class="chip">Tailwind 4</span><span class="chip">Radix UI</span><span class="chip">TanStack Query</span></div></div>
+        <div><div class="label">Backend &amp; infra</div><div class="chips">
+          <span class="chip">Turborepo</span><span class="chip">Render</span><span class="chip">Node.js 24</span><span class="chip">NATS JetStream</span><span class="chip">BullMQ</span><span class="chip">Docker</span><span class="chip">Sharp</span><span class="chip">Blurhash</span></div></div>
+        <div><div class="label">Data, payments &amp; security</div><div class="chips">
+          <span class="chip">PostgreSQL</span><span class="chip">Prisma 7</span><span class="chip">Redis</span><span class="chip">M-Pesa Daraja</span><span class="chip">Clerk</span><span class="chip">OpenTelemetry</span><span class="chip">Datadog</span><span class="chip">Pino</span></div></div>
+      </div>
+    </article>
+
+    <a class="card case-link reveal" href="/work/build-market" aria-label="Read the Build Market 2-minute case study and full architecture deep dive">
+      <div class="l"><div class="ic" aria-hidden="true"><i class="ti ti-file-code"></i></div><div style="min-width:0"><small>2-minute executive summary + full deep dive</small><strong>Read the Build Market architectural case study</strong></div></div>
+      <div class="r"><span>Read case study</span><i class="ti ti-arrow-right" aria-hidden="true"></i></div>
+    </a>
+
+    <div class="sec-head sub reveal"><h2 id="h-decisions">Engineering decisions &amp; essays</h2><div class="rule" aria-hidden="true"></div></div>
+    <div class="decisions" role="list" aria-labelledby="h-decisions">
+      <a class="card decision reveal" href="/writing/why-we-ack-only-after-commit" role="listitem">
+        <i class="ti ti-checks" aria-hidden="true"></i>
+        <h3>Acknowledge only after commit</h3>
+        <p>Consumers call <code>ack()</code> only once the database transaction commits. A crash in between triggers redelivery, and idempotent upserts make the replay harmless, so nothing is lost or applied twice.</p>
+        <div class="tradeoff"><b>Read essay →</b> Every handler must be idempotent.</div>
+      </a>
+      <a class="card decision reveal" style="--d:.06s" href="/writing/designing-around-flaky-regulator-portals" role="listitem">
+        <i class="ti ti-route" aria-hidden="true"></i>
+        <h3>Degrade, never block</h3>
+        <p>When a regulator portal is down, a circuit breaker opens and the license moves to pending. A NATS retry stream keeps trying for 24 hours, with a human review queue as the last resort.</p>
+        <div class="tradeoff"><b>Read essay →</b> Multi-stage regulator fallback.</div>
+      </a>
+      <a class="card decision reveal" href="/decisions/adr-admin-001-capability-auth" role="listitem">
+        <i class="ti ti-shield-lock" aria-hidden="true"></i>
+        <h3>Authority lives in the database</h3>
+        <p>Admin capabilities resolve from a database profile on every mutation, never from token claims. Critical actions also require fresh step-up re-authentication within strict tiered freshness windows.</p>
+        <div class="tradeoff"><b>Read ADR-ADMIN-001 →</b> One extra DB read per admin mutation.</div>
+      </a>
+      <a class="card decision reveal" style="--d:.06s" href="/writing/non-custodial-escrow-on-mpesa" role="listitem">
+        <i class="ti ti-building-bank" aria-hidden="true"></i>
+        <h3>Non-custodial escrow</h3>
+        <p>Milestone funds sit in a licensed bank or PSP trust account, tracked by an internal claims ledger, with idempotent M-Pesa disbursements. The platform never commingles client money.</p>
+        <div class="tradeoff"><b>Read essay →</b> Non-custodial M-Pesa Daraja 2.0 waterfall.</div>
+      </a>
+    </div>
+
+    <div class="sec-head reveal" style="margin-top:4rem"><span class="num">02</span><h2 id="h-backend">Backend projects</h2><div class="rule" aria-hidden="true"></div></div>
+    <div class="projects">
+      <article class="card proj reveal">
+        <div class="proj-head"><span class="proj-num">01</span>
+          <div class="proj-links">
+            <a class="circle-link" href="https://github.com/donshammah96/event-streaming" target="_blank" rel="noopener noreferrer" aria-label="Event Streaming Platform on GitHub"><i class="ti ti-brand-github" aria-hidden="true"></i></a>
+            <a class="circle-link" href="https://event-streaming-gamma.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Event Streaming Platform live demo"><i class="ti ti-external-link" aria-hidden="true"></i></a>
+          </div></div>
+        <div class="proj-body"><div><h3><a href="https://github.com/donshammah96/event-streaming" target="_blank" rel="noopener noreferrer">Event Streaming Platform</a></h3>
+          <p>NATS-backed pub/sub with schema validation, consumer groups, dead-letter queues, and a dashboard for topic inspection and event replay.</p></div>
+          <div class="chips"><span class="chip">NATS</span><span class="chip">TypeScript</span><span class="chip">PostgreSQL</span><span class="chip">Docker</span></div></div>
+      </article>
+
+      <article class="card proj reveal" style="--d:.06s">
+        <div class="proj-head"><span class="proj-num">02</span>
+          <div class="proj-links"><a class="circle-link" href="https://github.com/donshammah96/distributed-task-queue" target="_blank" rel="noopener noreferrer" aria-label="Distributed Task Queue on GitHub"><i class="ti ti-brand-github" aria-hidden="true"></i></a></div></div>
+        <div class="proj-body"><div><h3><a href="https://github.com/donshammah96/distributed-task-queue" target="_blank" rel="noopener noreferrer">Distributed Task Queue</a></h3>
+          <p>Fault-tolerant job scheduler with at-least-once delivery, BullMQ worker pools, and a pluggable backend interface.</p></div>
+          <div class="chips"><span class="chip">TypeScript</span><span class="chip">BullMQ</span><span class="chip">Redis</span><span class="chip">Node.js</span></div></div>
+      </article>
+
+      <article class="card proj reveal" style="--d:.12s">
+        <div class="proj-head"><span class="proj-num">03</span>
+          <div class="proj-links"><a class="circle-link" href="https://github.com/donshammah96/api-gateway" target="_blank" rel="noopener noreferrer" aria-label="Type-Safe API Gateway on GitHub"><i class="ti ti-brand-github" aria-hidden="true"></i></a></div></div>
+        <div class="proj-body"><div><h3><a href="https://github.com/donshammah96/api-gateway" target="_blank" rel="noopener noreferrer">Type-Safe API Gateway</a></h3>
+          <p>Reverse proxy with tRPC routing, JWT auth, per-IP rate limiting via Upstash, and distributed tracing.</p></div>
+          <div class="chips"><span class="chip">TypeScript</span><span class="chip">tRPC</span><span class="chip">Redis</span><span class="chip">AWS</span></div></div>
+      </article>
+
+      <article class="card proj reveal">
+        <div class="proj-head"><span class="proj-num">04</span>
+          <div class="proj-links"><a class="circle-link" href="https://github.com/donshammah96/ai-workflow-engine" target="_blank" rel="noopener noreferrer" aria-label="AI Workflow Engine on GitHub"><i class="ti ti-brand-github" aria-hidden="true"></i></a></div></div>
+        <div class="proj-body"><div><h3><a href="https://github.com/donshammah96/ai-workflow-engine" target="_blank" rel="noopener noreferrer">AI Workflow Engine</a></h3>
+          <p>LangChain orchestration for multi-step LLM pipelines with tool calling, memory management, and streaming via the Vercel AI SDK.</p></div>
+          <div class="chips"><span class="chip">LangChain</span><span class="chip">Vercel AI SDK</span><span class="chip">PostgreSQL</span><span class="chip">Node.js</span></div></div>
+      </article>
+
+      <article class="card proj reveal" style="--d:.06s">
+        <div class="proj-head"><span class="proj-num">05</span>
+          <div class="proj-links"><a class="circle-link" href="https://github.com/donshammah96/resilience-library" target="_blank" rel="noopener noreferrer" aria-label="Resilience Library on GitHub"><i class="ti ti-brand-github" aria-hidden="true"></i></a></div></div>
+        <div class="proj-body"><div><h3><a href="https://github.com/donshammah96/resilience-library" target="_blank" rel="noopener noreferrer">Resilience Library</a></h3>
+          <p>Fault-tolerance primitives for Node.js: circuit breakers, exponential backoff with jitter, bulkheads, and timeout wrappers.</p></div>
+          <div class="chips"><span class="chip">TypeScript</span><span class="chip">Node.js</span><span class="chip">Supabase</span></div></div>
+      </article>
+
+      <article class="card proj reveal" style="--d:.12s">
+        <div class="proj-head"><span class="proj-num">06</span>
+          <div class="proj-links"><a class="circle-link" href="https://github.com/donshammah96/observability-stack" target="_blank" rel="noopener noreferrer" aria-label="Observability Stack on GitHub"><i class="ti ti-brand-github" aria-hidden="true"></i></a></div></div>
+        <div class="proj-body"><div><h3><a href="https://github.com/donshammah96/observability-stack" target="_blank" rel="noopener noreferrer">Observability Stack</a></h3>
+          <p>Telemetry pipeline with structured NDJSON logging, correlation IDs, distributed tracing, and Grafana dashboards for SLOs.</p></div>
+          <div class="chips"><span class="chip">OpenTelemetry</span><span class="chip">Grafana</span><span class="chip">AWS</span><span class="chip">Node.js</span></div></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="skills" aria-labelledby="h-skills">
+    <div class="sec-head reveal"><span class="num">03</span><h2 id="h-skills">Toolkit</h2><div class="rule" aria-hidden="true"></div></div>
+    <div class="skills">
+      <div class="card skill-card reveal"><h3><i class="ti ti-server-2" aria-hidden="true"></i>Backend</h3><div class="chips">
+        <span class="chip">TypeScript</span><span class="chip">Node.js</span><span class="chip">tRPC</span><span class="chip">PostgreSQL</span><span class="chip">Prisma</span><span class="chip">Redis</span></div></div>
+      <div class="card skill-card reveal" style="--d:.06s"><h3><i class="ti ti-arrows-shuffle" aria-hidden="true"></i>Distributed systems</h3><div class="chips">
+        <span class="chip">NATS JetStream</span><span class="chip">BullMQ</span><span class="chip">Event-driven design</span><span class="chip">State machines</span><span class="chip">Idempotency</span><span class="chip">DLQs</span></div></div>
+      <div class="card skill-card reveal" style="--d:.12s"><h3><i class="ti ti-cloud" aria-hidden="true"></i>Platform &amp; delivery</h3><div class="chips">
+        <span class="chip">Next.js</span><span class="chip">Cloudflare Workers</span><span class="chip">Docker</span><span class="chip">Turborepo</span><span class="chip">OpenTelemetry</span><span class="chip">AWS</span></div></div>
+    </div>
+  </section>
+
+  <section class="two" id="experience-about">
+    <div id="experience">
+      <div class="sec-head reveal"><span class="num">04</span><h2>Experience</h2><div class="rule" aria-hidden="true"></div></div>
+      <div class="timeline reveal">
+        <div class="tl-item">
+          <time class="tl-year" datetime="2025">2025 — present</time>
+          <h3 class="tl-role">Solo Software Engineer &amp; Founder</h3>
+          <div class="tl-co">Build Market · Nairobi (Remote)</div>
+          <p class="tl-note">Designed and built a construction and real estate marketplace for East Africa as a solo engineer. Turborepo monorepo with Next.js and tRPC, a NATS event bus for decoupled messaging, BullMQ/Redis for background jobs, Clerk for session auth, and M-Pesa APIs for local payments.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="about">
+      <div class="sec-head reveal"><span class="num">05</span><h2>About</h2><div class="rule" aria-hidden="true"></div></div>
+      <p class="about-text reveal">I'm a software engineer in my third year of building, focused on backend systems, clean architecture, and distributed infrastructure. I care about systems that are <strong>correct by design</strong> — not just fast, but sound under failure. Building Build Market alone taught me monorepo orchestration, event buses, and custom capability-based authorization the hard way.</p>
+    </div>
+  </section>
+
+  <section id="contact" aria-labelledby="h-contact">
+    <div class="card contact reveal">
+      <h2 id="h-contact">Let's build something <em>dependable.</em></h2>
+      <p>Open to backend, systems, and full-stack engineering roles.</p>
+      <div class="cta">
+        <button class="btn primary" id="copy-email" type="button" data-email="hello@donshammah.tech" aria-label="Copy email address hello@donshammah.tech to clipboard"><i class="ti ti-copy" aria-hidden="true"></i>hello@donshammah.tech</button>
+        <a class="btn" href="mailto:hello@donshammah.tech"><i class="ti ti-mail" aria-hidden="true"></i>Send email</a>
+        <a class="btn" href="https://www.linkedin.com/in/donshammah" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="ti ti-brand-linkedin" aria-hidden="true"></i>LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

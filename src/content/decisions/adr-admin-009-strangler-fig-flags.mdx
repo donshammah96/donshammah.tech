@@ -1,0 +1,22 @@
+---
+adrId: "ADR-ADMIN-009"
+title: "Strangler-Fig Migrations via Typed Feature Flags with Expiry Governance"
+description: "Migrate legacy administrative verticals behind typed feature flags enforced by automated CI expiration checks."
+status: "Ratified"
+scope: "apps/admin"
+date: 2026-04-19
+tradeoff: "Temporary route duplication during migration phases, offset by zero-downtime cutovers and automated flag cleanup."
+enforcedBy: "pnpm run admin:check-governance"
+---
+
+## Context
+
+Rewriting `apps/admin` to enforce ASVS L2 security controls in a single big-bang branch would stall delivery and risk production regressions.
+
+## Decision
+
+Introduce typed `AdminFeatureFlag` gates with mandatory owner and expiration metadata. Migrate `/users`, `/verifications`, and `/audit` slices incrementally, then retire the flags once production parity is verified.
+
+## Consequences
+
+All 12 overhaul phases completed with zero downtime, and all temporary v2 flags were cleanly retired on schedule.

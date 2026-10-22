@@ -1,0 +1,22 @@
+---
+adrId: "ADR-001"
+title: "Clerk for Identity Authentication, PostgreSQL for Role Authority"
+description: "Session tokens establish who the actor is; PostgreSQL profile records establish what the actor is permitted to do."
+status: "Ratified"
+scope: "monorepo"
+date: 2026-01-18
+tradeoff: "Requires transactional metadata synchronization on role changes, but prevents stale JWT privilege retention."
+enforcedBy: "withAuth / safeAction actor resolution middleware"
+---
+
+## Context
+
+Relying solely on third-party JWT custom claims for authorization creates a revocation window whenever a contractor's license is suspended or an operator's role changes.
+
+## Decision
+
+Clerk handles authentication and session freshness only. Every protected route and Server Action resolves the actor's authoritative role and capability set from PostgreSQL (`User` / `AdminProfile`).
+
+## Consequences
+
+Immediate revocation across all edge and container workers upon database state change.

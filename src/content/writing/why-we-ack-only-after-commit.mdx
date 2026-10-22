@@ -1,0 +1,64 @@
+---
+title: "Why We Acknowledge NATS Messages Only After the Database Transaction Commits"
+description: "How ordering your broker ack() after your PostgreSQL commit—and designing every handler as an idempotent upsert—eliminates silent data loss and double-payouts."
+pubDate: 2026-10-15
+readingTime: "4 min read"
+tags: ["NATS JetStream", "Distributed Systems", "PostgreSQL", "Idempotency"]
+relatedAdr: "adr-010-worker-daemon-isolation"
+notionMirrorUrl: "https://fascinated-piper-d98.notion.site/Build-Market-Architectural-Topography-Core-Systems-Design-37c3a344ec6780b9b509ffa6e9700869"
+---
+
+When building an event-driven financial and compliance system like **Build Market**, the most dangerous failure mode isn't a crashed worker container—it is a crashed worker container that already told the message broker it succeeded, or one that repeats a non-idempotent side effect on restart.
+
+## The Two Deadly Ordering Bugs
+
+1. **Auto-Ack on Receive (At-Most-Once):** If you acknowledge a message as soon as it arrives and the Node.js process hits an OOM or network drop before PostgreSQL commits, that milestone approval or license verification event is lost silently.
+2. **Ack After Non-Idempotent Write:** If you commit to the database, and the worker crashes _10 milliseconds before_ `msg.ack()` reaches the NATS server, JetStream will redeliver the message after `ack_wait` expires. If your database handler uses a blind `INSERT` or increments a balance (`balance = balance + amount`), redelivery corrupts your ledger.
+
+## The Invariant: Commit First, Ack Second, Upsert Always
+
+In Build Market, consumers never touch raw NATS primitives directly. Our `@build/nats` consumer wrapper enforces a strict lifecycle:
+
+```typescript
+export async function handleJetStreamMessage<T>(
+  msg: JsMsg,
+  schema: ZodSchema<T>,
+  handler: (payload: T, ctx: TraceContext) => Promise<void>,
+) {
+  const parsed = schema.safeParse(JSON.parse(msg.string()));
+  if (!parsed.success) {
+    msg.term(); // Poison-pill termination: never retry schema-invalid JSON
+    return;
+  }
+
+  try {
+    const heartbeat = setInterval(() => msg.working(), 10_000);
+    try {
+      await handler(parsed.data, extractTraceContext(msg.headers));
+    } finally {
+      clearInterval(heartbeat);
+    }
+
+    // Acknowledge ONLY after the DB transaction has durably committed
+    msg.ack();
+  } catch (err) {
+    if (msg.info.redeliveryCount >= MAX_DELIVERIES) {
+      await publishToDeadLetterStream(msg, err);
+      msg.term();
+    } else {
+      msg.nak(calculateExponentialJitter(msg.info.redeliveryCount));
+    }
+  }
+}
+```
+
+## Pairing Consumer Upserts with Content-Addressed `msgId`
+
+On the producer side, publishing to our `LICENSES` or `PROJECTS` streams attaches a deterministic `msgId`:
+
+```typescript
+const msgId = `${licenseId}-verify-${verificationAttemptNumber}`;
+await producer.publishWithRetry("license.auto_verified", payload, { msgId });
+```
+
+Within JetStream's deduplication window, retry storms from upstream callers are silently dropped by the broker. And if a worker crashes between the database commit and `msg.ack()`, the handler is keyed on composite unique constraints (`@@unique([authority, licenseNumber])` or `[conversationId, transactionId]`), turning the replay into a harmless no-op.

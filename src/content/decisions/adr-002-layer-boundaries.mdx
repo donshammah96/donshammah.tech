@@ -1,0 +1,22 @@
+---
+adrId: "ADR-002"
+title: "Strict Layer Boundaries & Unidirectional Import Flow"
+description: "HTTP route handlers and Server Actions are thin transport adapters that must never import Prisma directly."
+status: "Ratified"
+scope: "apps/client"
+date: 2026-01-24
+tradeoff: "More boilerplate per endpoint (Adapter → Service → Mapper → Repository) in exchange for zero business logic leakage and fast unit testing."
+enforcedBy: "AST boundary test suite in CI"
+---
+
+## Context
+
+When route handlers mix HTTP parsing, rate limiting, and raw Prisma queries, business invariants get duplicated across REST routes and Server Actions.
+
+## Decision
+
+Enforce a strict unidirectional import graph: `Facades → Route/Action Adapters → Domain Services → Mappers → Repositories → @build/db`. Adapters may only call `.safeParse()`, rate limiters, idempotency guards, and domain services.
+
+## Consequences
+
+Domain services can be tested in isolation without mocking Next.js `Request`/`Response` objects.

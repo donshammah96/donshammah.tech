@@ -1,0 +1,28 @@
+---
+title: "Designing Around Flaky Regulator Portals: Cache, Circuit Breaker, Stream, Operator"
+description: "How Build Market verifies contractor licenses against 9 Kenyan statutory boards without ever blocking user onboarding when government portals go down."
+pubDate: 2026-10-18
+readingTime: "5 min read"
+tags: ["Resilience", "Circuit Breaker", "NATS JetStream", "State Machines"]
+relatedAdr: "adr-003-vertical-domain-slicing"
+notionMirrorUrl: "https://fascinated-piper-d98.notion.site/Build-Market-Architectural-Topography-Core-Systems-Design-37c3a344ec6780b9b509ffa6e9700869"
+---
+
+If you build software in East Africa that depends on statutory registers—NCA for contractors, EBK for engineers, BORAQS for architects and quantity surveyors, or KRA for tax compliance—you quickly learn one rule: **you cannot put a synchronous government portal call in the middle of a user's signup flow.**
+
+Portals time out, maintenance windows happen unannounced, and HTML/JSON schemas shift without warning. Yet skipping verification defeats the core value proposition of a compliance-first marketplace.
+
+## The 4-Stage Graceful Degradation Pipeline
+
+Instead of a binary pass/fail HTTP call, Build Market models credential verification as an asynchronous state machine backed by four layers of defense:
+
+1. **48-Hour Verification Cache:** If a practicing license was confirmed within the last 48 hours, we serve the cached verification immediately.
+2. **Sliding-Window Circuit Breaker (`@build/resilience`):** If an external board times out 3 consecutive times within 60 seconds, the circuit breaker trips open. Subsequent requests fail fast in `<1ms` instead of hanging web threads for 8 seconds.
+3. **24-Hour NATS JetStream Retry Stream:** When a portal is unreachable, the professional's credential transitions to `PENDING_VERIFICATION`—allowing them to finish onboarding and configure their profile—while a durable job on the `LICENSES` stream retries with exponential backoff and jitter for up to 24 hours.
+4. **Human Operator Fallback (`apps/verification-ops`):** If retries exhaust or a discrepancy is detected, the case routes to our dedicated operator console with duplicate-license detection and two-approver sign-off controls.
+
+## Why Heartbeats (`msg.working()`) Matter for Slow Portals
+
+When a statutory portal is degraded but not completely down, responses can take 6–12 seconds. Without intervention, NATS JetStream might assume the consumer died and redeliver the message to another worker, amplifying load against an already struggling regulator endpoint.
+
+Our consumer loop emits `msg.working()` heartbeats while awaiting the external response, extending the broker's `ack_wait` lease cleanly until the check resolves or hits our hard timeout guard.

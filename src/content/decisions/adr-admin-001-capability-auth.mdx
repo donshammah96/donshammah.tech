@@ -1,0 +1,24 @@
+---
+adrId: "ADR-ADMIN-001"
+title: "Capability-Based Admin Authorization & Tiered Step-Up Freshness"
+description: "Why administrative mutations resolve permissions from a database AdminProfile on every request and require step-up re-authentication."
+status: "Ratified"
+scope: "apps/admin"
+date: 2026-03-14
+tradeoff: "Incurs one indexed PostgreSQL lookup per administrative mutation in exchange for instant revocation and zero stale-JWT privilege escalation."
+enforcedBy: "pnpm run admin:report-security-drift:strict (0 findings across 309 files)"
+---
+
+## Context
+
+Checking coarse role strings (`if (role === "ADMIN")`) in session tokens leaves administrative surfaces vulnerable to stale tokens and privilege creep.
+
+## Decision
+
+1. Resolve `AdminActor` and `AdminRole` from the database `AdminProfile` on every mutation inside `safeAction`.
+2. Enforce granular `AdminCapability` checks (`OVERRIDE_VERIFICATION`, `RELEASE_ESCROW`).
+3. Require recent re-authentication within strict Tier 1 or Tier 2 freshness windows for high-risk mutations.
+
+## Consequences
+
+Suspending an `AdminProfile` revokes authority across the entire platform immediately.

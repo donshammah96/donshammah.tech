@@ -1,0 +1,23 @@
+---
+const pathname = Astro.url.pathname;
+---
+<header class="nav" id="nav">
+  <a href="/" class="nav-logo" aria-label="Don Shammah — home">
+    <span class="dot" aria-hidden="true"></span>don.shammah
+  </a>
+  <div class="nav-right">
+    <nav class="nav-links" id="nav-links" aria-label="Primary">
+      <a href="/work/build-market" class:list={[{ active: pathname.startsWith('/work') }]}>Case Study</a>
+      <a href="/decisions" class:list={[{ active: pathname.startsWith('/decisions') }]}>ADRs</a>
+      <a href="/writing" class:list={[{ active: pathname.startsWith('/writing') }]}>Writing</a>
+      <a href="/#projects">Projects</a>
+      <a href="/resume.pdf" target="_blank" rel="noopener">Resume</a>
+    </nav>
+    <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle color theme">
+      <i class="ti ti-sun" aria-hidden="true"></i>
+    </button>
+    <button class="icon-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+      <i class="ti ti-menu-2" aria-hidden="true"></i>
+    </button>
+  </div>
+</header>

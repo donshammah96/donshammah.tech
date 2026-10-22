@@ -1,0 +1,22 @@
+---
+adrId: "ADR-006"
+title: "Class A–D Data Classification & Idempotency Replay Sanitization"
+description: "Prevent Class A (Secrets) and Class B (Sensitive PII) fields from ever persisting in idempotency caches or structured logs."
+status: "Ratified"
+scope: "monorepo"
+date: 2026-02-19
+tradeoff: "Idempotency replay payloads must be stripped via strict DTO mappers before caching."
+enforcedBy: "Zero-PII Pino log sanitizer + DTO mapper unit tests"
+---
+
+## Context
+
+Under Kenya's Data Protection Act (2019) and GDPR, caching full API responses for idempotency or logging payloads can inadvertently leak National IDs, KRA PINs, or phone numbers into Redis and log aggregators.
+
+## Decision
+
+Classify all schema fields into Class A (Restricted), Class B (Sensitive PII), Class C (Operational UUIDs/Enums), and Class D (Public). Only Class C and D fields may enter idempotency replay stores or NDJSON logs.
+
+## Consequences
+
+Provable compliance with ODPC regulations and zero PII exposure in telemetry pipelines.

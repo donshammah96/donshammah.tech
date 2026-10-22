@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const decisions = (await getCollection('decisions')).sort((a, b) =>
+  a.data.adrId.localeCompare(b.data.adrId)
+);
+---
+<BaseLayout
+  title="Architecture Decision Records (ADRs) — Don Shammah"
+  description="Curated Architecture Decision Records governing layer boundaries, capability-based authorization, NATS JetStream consumers, and worker isolation in Build Market."
+>
+  <section style="padding-top: 3.5rem;">
+    <div class="sec-head"><span class="num">ADR</span><h2>Architecture Decision Records</h2><div class="rule" aria-hidden="true"></div></div>
+    <p style="color: var(--muted); max-width: 44rem; margin-bottom: 2.5rem;">
+      On a solo engineering team there is no second human reviewer to catch a boundary violation. Every ADR below is paired with a mechanical enforcement gate in CI (AST boundary test, security drift scanner, or environment contract check).
+    </p>
+    <div class="decisions">
+      {decisions.map((adr) => (
+        <a class="card decision" href={`/decisions/${adr.id}`}>
+          <div class="badges">
+            <span class="badge hot">{adr.data.adrId}</span>
+            <span class="badge">{adr.data.scope}</span>
+            <span class="badge">{adr.data.status}</span>
+          </div>
+          <h3>{adr.data.title}</h3>
+          <p>{adr.data.description}</p>
+          <div class="tradeoff">
+            <b>Enforced by:</b> {adr.data.enforcedBy}
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,22 @@
+---
+adrId: "ADR-003"
+title: "Vertical Domain Slicing Over Horizontal Technical Layers"
+description: "Organize domain logic into 24 isolated vertical slices communicating only via public service contracts or NATS events."
+status: "Ratified"
+scope: "apps/client"
+date: 2026-02-02
+tradeoff: "Cross-domain queries must go through explicit service facades rather than ad-hoc multi-domain SQL joins."
+enforcedBy: "ESLint & AST import boundary checks"
+---
+
+## Context
+
+A 114-model schema shared across properties, projects, verifications, escrow, and stores risks turning into a tightly coupled ball of mud.
+
+## Decision
+
+Partition business logic into 24 vertical slices (`properties`, `projects`, `verifications`, `escrow`, `licenses`, `gdpr`, etc.). Slices may never import another slice's `repository.ts`.
+
+## Consequences
+
+Each slice can evolve or be extracted into a standalone microservice (as we did with `apps/verification-ops`) without untangling cross-slice queries.

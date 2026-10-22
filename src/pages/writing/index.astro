@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+<BaseLayout
+  title="Engineering Writing — Don Shammah"
+  description="Essays on distributed systems, NATS JetStream delivery guarantees, resilient integrations with government registries, and M-Pesa escrow architecture."
+>
+  <section style="padding-top: 3.5rem;">
+    <div class="sec-head"><span class="num">LOG</span><h2>Engineering Writing</h2><div class="rule" aria-hidden="true"></div></div>
+    <p style="color: var(--muted); max-width: 44rem; margin-bottom: 2.5rem;">
+      Focused essays on distributed systems, financial correctness, and building software that survives unreliable third-party infrastructure.
+    </p>
+    <div class="decisions">
+      {posts.map((post) => (
+        <a class="card decision" href={`/writing/${post.id}`}>
+          <div class="badges">
+            <span class="badge hot">{post.data.readingTime}</span>
+            {post.data.tags.slice(0, 2).map((t) => <span class="badge">{t}</span>)}
+          </div>
+          <h3>{post.data.title}</h3>
+          <p>{post.data.description}</p>
+          <div class="tradeoff">
+            <b>Published:</b> {post.data.pubDate.toISOString().slice(0, 10)}
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

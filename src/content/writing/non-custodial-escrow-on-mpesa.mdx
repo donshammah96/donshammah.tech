@@ -1,0 +1,37 @@
+---
+title: "Architecting Non-Custodial Milestone Escrow on M-Pesa Daraja 2.0"
+description: "How we combined bank trust accounts, composite idempotency anchors, and automated WHT/eTIMS waterfalls to protect construction capital in Kenya."
+pubDate: 2026-10-20
+readingTime: "5 min read"
+tags: ["FinTech", "M-Pesa Daraja", "PostgreSQL", "Escrow"]
+relatedAdr: "adr-admin-001-capability-auth"
+notionMirrorUrl: "https://fascinated-piper-d98.notion.site/Build-Market-Architectural-Topography-Core-Systems-Design-37c3a344ec6780b9b509ffa6e9700869"
+---
+
+In Kenyan residential and commercial construction, paying a contractor a 50% upfront deposit via personal M-Pesa or bank transfer leaves the homeowner with zero leverage if work stalls. Conversely, contractors regularly face delayed or disputed payments after completing a stage.
+
+Solving this requires milestone escrow—but holding client funds directly inside a startup's operational bank account violates anti-commingling principles under Kenya's _National Payment System Act (Cap 491B)_.
+
+## Non-Custodial Ledger + Regulated Trust Account
+
+Build Market separates **custody** from **orchestration**:
+
+- **Custody:** Client funds sit in a ring-fenced escrow trust account held by a licensed commercial bank / PSP partner.
+- **Orchestration:** Build Market maintains an immutable PostgreSQL `EscrowClaim` ledger that tracks funding, inspection sign-off, statutory tax deductions, and payout instructions.
+
+## Composite Idempotency on M-Pesa Callbacks
+
+Safaricom Daraja 2.0 webhooks can arrive more than once during network blips. Every transaction mode in Build Market is anchored to a strict database uniqueness constraint:
+
+- **C2B STK Push:** `@@unique([merchantRequestId, checkoutRequestId])` on `MpesaTransaction`.
+- **B2C Disbursement:** `@@unique([conversationId, transactionId])` on `MpesaB2C`.
+- **High-Value Milestones (> KES 250,000):** Milestones exceeding the single-transaction M-Pesa limit route through PesaLink/RTGS bank-to-trust transfers governed by the exact same `EscrowClaim` idempotency key.
+
+## Deterministic Tax & Fee Waterfalls
+
+Before a contractor accepts a milestone, the domain service computes and locks the exact net payout waterfall using `Decimal(12, 2)` arithmetic:
+
+- **Gross Milestone Deposit:** `KES 100,000.00`
+- **KRA Withholding Tax:** Dynamically resolved (`3%` for registered building works contractors; `5%` for consulting engineers/architects under Cap 470).
+- **Platform Fee & 16% VAT:** Calculated on the intermediary commission only.
+- **eTIMS Validation:** Final payout release links the vendor's KRA eTIMS fiscal invoice QR confirmation so corporate developers retain full tax deductibility.
