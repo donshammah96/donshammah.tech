@@ -1,21 +1,21 @@
 /* ============ TOKENS ============ */
 :root {
-  --bg: #fafafa;
-  --bg-2: #f4f4f5;
-  --bg-3: #e8e8ec;
-  --ink: #0a0a0c;
-  --muted: #52525b;
-  --hint: #8a8a94;
-  --line: #e4e4e7;
-  --line-2: #d4d4d8;
-  --accent: #2563eb;
-  --accent-2: #7c3aed;
-  --accent-soft: rgba(37, 99, 235, 0.09);
-  --ok: #16a34a;
-  --ok-soft: rgba(22, 163, 74, 0.12);
-  --glass: rgba(255, 255, 255, 0.72);
+  --bg: #f8fafc;
+  --bg-2: #f1f5f9;
+  --bg-3: #e2e8f0;
+  --ink: #0b1220;
+  --muted: #475569;
+  --hint: #64748b;
+  --line: #e2e8f0;
+  --line-2: #cbd5e1;
+  --accent: #0d9488;       /* Deep rich teal (Teal 600) */
+  --accent-2: #0284c7;     /* Ocean cyan (Sky 600) */
+  --accent-soft: rgba(13, 148, 136, 0.1);
+  --ok: #059669;
+  --ok-soft: rgba(5, 150, 105, 0.12);
+  --glass: rgba(255, 255, 255, 0.78);
   --shadow:
-    0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 32px -12px rgba(0, 0, 0, 0.12);
+    0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 32px -12px rgba(13, 148, 136, 0.12);
 
   --mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --display: "Fraunces", Georgia, serif;
@@ -27,21 +27,21 @@
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 [data-theme="dark"] {
-  --bg: #09090b;
-  --bg-2: #101013;
-  --bg-3: #18181c;
-  --ink: #f4f4f6;
-  --muted: #a1a1aa;
-  --hint: #71717a;
-  --line: #202024;
-  --line-2: #2e2e34;
-  --accent: #60a5fa;
-  --accent-2: #a78bfa;
-  --accent-soft: rgba(96, 165, 250, 0.1);
-  --ok: #4ade80;
-  --ok-soft: rgba(74, 222, 128, 0.12);
-  --glass: rgba(16, 16, 19, 0.72);
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 20px 40px -16px rgba(0, 0, 0, 0.6);
+  --bg: #05070a;           /* Deep obsidian / true dark */
+  --bg-2: #0b1117;         /* Elevated obsidian card surface */
+  --bg-3: #121a24;         /* Hover / interactive highlight */
+  --ink: #f0fdfa;          /* Crisp high-contrast mint-white */
+  --muted: #94a3b8;        /* Slate text */
+  --hint: #64748b;         /* Muted hint */
+  --line: #162330;         /* Deep teal-slate border */
+  --line-2: #223547;       /* Elevated border */
+  --accent: #2dd4bf;       /* Electric Teal (Teal 400) */
+  --accent-2: #38bdf8;     /* Luminous Cyan (Sky 400) */
+  --accent-soft: rgba(45, 212, 191, 0.12);
+  --ok: #34d399;
+  --ok-soft: rgba(52, 211, 153, 0.14);
+  --glass: rgba(11, 17, 23, 0.78);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 20px 40px -16px rgba(0, 0, 0, 0.8), 0 0 24px -10px rgba(45, 212, 191, 0.2);
 }
 
 /* ============ BASE ============ */
