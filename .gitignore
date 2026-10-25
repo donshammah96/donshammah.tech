@@ -25,6 +25,9 @@ test-results/
 playwright-report/
 blob-report/
 
+# Scratch & temporary artifacts
+scratch/
+
 # Logs
 *.log
 npm-debug.log*

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArchitectureDiagram from '../components/ArchitectureDiagram.astro';
+import ProjectGallery from '../components/ProjectGallery.astro';
 ---
 <BaseLayout
   title="Don Shammah — Backend & Systems Engineer"
@@ -74,6 +75,8 @@ import ArchitectureDiagram from '../components/ArchitectureDiagram.astro';
         <div><h4>apps/verification-ops <small>Regulator Queue</small></h4><p>Credential review against NCA, EBK, BORAQS, EARB, EPRA, VRB, ISK, NEMA, and KEBS.</p></div>
         <div><h4>apps/workers <small>Container Daemon</small></h4><p>Node.js 24 Alpine daemon on Render with HTTP liveness probes, BullMQ, and NATS JetStream subscribers.</p></div>
       </div>
+
+      <ProjectGallery />
 
       <div class="hl-grid">
         <div class="hl"><i class="ti ti-certificate" aria-hidden="true"></i><h4>Statutory verification</h4><p>State machines verifying individual and firm credentials against nine statutory boards, with an operator fallback when registers are down.</p></div>

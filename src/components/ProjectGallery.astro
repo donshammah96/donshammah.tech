@@ -1,0 +1,103 @@
+---
+import { Image } from 'astro:assets';
+import dossierImg from '../assets/projects/03-contractor-verification-dossier.png';
+import escrowImg from '../assets/projects/04-milestone-escrow-stk-push.png';
+import waterfallImg from '../assets/projects/05-contractor-payout-waterfall.png';
+import verifOpsImg from '../assets/projects/06-verification-ops-control-center.png';
+import adminAuthImg from '../assets/projects/07-admin-step-up-auth.png';
+import traceImg from '../assets/projects/08-distributed-trace-waterfall.png';
+
+const tabs = [
+  { id: 'escrow', label: 'Milestone Escrow', url: 'https://buildmarket.app/projects/karen-villa/milestone-escrow', img: escrowImg, caption: 'Non-custodial bank trust escrow funding with Safaricom M-Pesa STK push prompt.' },
+  { id: 'waterfall', label: 'Payout Waterfall', url: 'https://buildmarket.app/contractor/settlement/stl-99214', img: waterfallImg, caption: 'Contractor milestone settlement waterfall showing 5% statutory WHT deduction and direct bank release.' },
+  { id: 'dossier', label: 'Verified Dossier', url: 'https://buildmarket.app/professionals/dossier/boraqs-a982', img: dossierImg, caption: 'Statutory verification evidence across BORAQS, NCA-1, and KRA eTIMS.' },
+  { id: 'verifops', label: 'Verification Ops', url: 'https://verification-ops.buildmarket.app/queue/escalated', img: verifOpsImg, caption: 'Internal regulatory operator queue with duplicate license detection and four-eyes escalation.' },
+  { id: 'admin', label: 'Admin Step-Up Auth', url: 'https://admin.buildmarket.app/roles/capabilities', img: adminAuthImg, caption: 'ADR-ADMIN-001 session elevation prompt for Tier 1 destructive administrative mutations.' },
+  { id: 'trace', label: 'Telemetry Trace', url: 'https://telemetry.buildmarket.app/traces/7f1c90a28b5e4d81', img: traceImg, caption: '118ms distributed trace waterfall from edge adapter through NATS JetStream and Render workers.' }
+];
+---
+
+<div class="gallery-block">
+  <div class="label"><i class="ti ti-device-desktop-analytics" aria-hidden="true"></i>System interfaces &amp; execution evidence</div>
+  
+  <div class="screenshot-gallery">
+    <div class="gallery-tabs" role="tablist" aria-label="Build Market system screenshots">
+      {tabs.map((tab, idx) => (
+        <button 
+          type="button"
+          class={`gallery-tab ${idx === 0 ? 'active' : ''}`}
+          data-target={tab.id}
+          data-url={tab.url}
+          role="tab"
+          aria-selected={idx === 0 ? 'true' : 'false'}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+
+    <div class="browser-frame">
+      <div class="browser-bar">
+        <div class="dots" aria-hidden="true">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+        </div>
+        <div class="browser-url" id="gallery-active-url">{tabs[0].url}</div>
+        <div class="browser-tag">2x Retina · Verified State</div>
+      </div>
+
+      <div class="gallery-viewport">
+        {tabs.map((tab, idx) => (
+          <figure 
+            class={`gallery-slide ${idx === 0 ? 'active' : ''}`} 
+            id={`slide-${tab.id}`}
+          >
+            <Image 
+              src={tab.img} 
+              alt={tab.caption}
+              class="gallery-img"
+              loading={idx === 0 ? 'eager' : 'lazy'}
+            />
+            <figcaption class="gallery-caption">
+              <i class="ti ti-info-circle" aria-hidden="true"></i>
+              <span>{tab.caption}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function initGallery() {
+    const tabs = document.querySelectorAll('.gallery-tab');
+    const slides = document.querySelectorAll('.gallery-slide');
+    const urlEl = document.getElementById('gallery-active-url');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.getAttribute('data-target');
+        const url = tab.getAttribute('data-url');
+
+        tabs.forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+
+        slides.forEach(s => s.classList.remove('active'));
+        const activeSlide = document.getElementById(`slide-${target}`);
+        if (activeSlide) activeSlide.classList.add('active');
+
+        if (urlEl && url) urlEl.textContent = url;
+      });
+    });
+  }
+
+  // Initialize on load and client-side page transitions
+  initGallery();
+  document.addEventListener('astro:page-load', initGallery);
+</script>

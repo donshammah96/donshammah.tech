@@ -1200,3 +1200,141 @@ footer a:hover {
     transform: none;
   }
 }
+
+
+/* ============ SCREENSHOT GALLERY & BROWSER MOCKUP ============ */
+.gallery-block {
+  margin: 2.2rem 0;
+}
+
+.screenshot-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.gallery-tabs {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 0.3rem;
+  scrollbar-width: none;
+}
+
+.gallery-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery-tab {
+  font: 500 11px var(--mono);
+  letter-spacing: 0.04em;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--r-sm);
+  background: var(--bg-3);
+  color: var(--muted);
+  border: 1px solid var(--line-2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s var(--ease);
+}
+
+.gallery-tab:hover {
+  color: var(--ink);
+  border-color: var(--accent);
+}
+
+.gallery-tab.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.browser-frame {
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-md);
+  background: var(--bg);
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+}
+
+.browser-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: var(--bg-3);
+  border-bottom: 1px solid var(--line-2);
+  font: 400 11px var(--mono);
+}
+
+.browser-bar .dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.browser-bar .dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.browser-bar .dot.red { background: #ef4444; }
+.browser-bar .dot.yellow { background: #f59e0b; }
+.browser-bar .dot.green { background: #10b981; }
+
+.browser-url {
+  color: var(--muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 60%;
+}
+
+.browser-tag {
+  font-size: 10px;
+  color: var(--hint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.gallery-viewport {
+  position: relative;
+  width: 100%;
+  background: #090a0f;
+}
+
+.gallery-slide {
+  display: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gallery-slide.active {
+  display: block;
+}
+
+.gallery-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.gallery-caption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--bg-2);
+  border-top: 1px solid var(--line-2);
+  font: 400 12px var(--sans);
+  color: var(--muted);
+}
+
+.gallery-caption i {
+  color: var(--accent);
+  font-size: 14px;
+}
